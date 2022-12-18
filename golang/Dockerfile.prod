@@ -1,0 +1,16 @@
+FROM golang:1.19.4 as go_builder
+
+WORKDIR /app
+
+COPY main.go .
+
+RUN go build -o main main.go
+
+# ------------------------------------------------- #
+FROM golang:1.19.4-alpine3.17
+
+WORKDIR /exec
+
+COPY --from=go_builder /app/main .
+
+CMD ["/exec/main"]
